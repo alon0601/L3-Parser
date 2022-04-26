@@ -92,7 +92,8 @@ describe('Q2 Tests', () => {
         expect(evalP(`(L3` + q2 + q2_test_string + `3)`)).to.deep.equal(makeOk(3));
         expect(evalP(`(L3` + q2 + q2_test_string + `(define dict (make-dict)) (dict? dict)` + `)`)).to.deep.equal(makeOk(true));
         expect(evalP(`(L3` + q2 + q2_test_string + `(define dict (make-dict)) (dict? '(2  4))` + `)`)).to.deep.equal(makeOk(false));
-        //expect(evalP(`(L3` + q2 + q2_test_string + `(define dict (make-dict)) (result->val (get (result->val (put dict 3 4)) 3))` + `)`)).to.deep.equal(makeOk(4));
+
+        expect(evalP(`(L3` + q2 + q2_test_string + `(define dict (make-dict)) (result->val (get (result->val (put dict 3 4)) 3))` + `)`)).to.deep.equal(makeOk(4));
         // expect(evalP(`(L3` + q2 + q2_test_string + `(define dict (make-dict)) (result->val (get (result->val (put (result->val (put dict 3 4) ) 3 5)) 3))` + `)`)).to.deep.equal(makeOk(5));
         // expect(evalP(`(L3` + q2 + q2_test_string + `(define dict (make-dict)) (result->val (get (result->val (put dict 3 4)) 4))` + `)`)).to.deep.equal(makeOk("Key not found"));
         expect(evalP(`(L3` + q2 + q2_test_string + `(define dict (make-dict)) (result->val (put '(1 2) 3 4))` + `)`)).to.deep.equal(makeOk("Error: not a dictionary"));
