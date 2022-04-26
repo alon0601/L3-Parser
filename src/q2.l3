@@ -110,8 +110,20 @@
   )
 )
 
+(define filter-dict-rec
+  (lambda (dict pred)
+    (if (eq? dict '()) '()
+      (if (eq? #t (pred (car (car dict)) (cdr (car dict))))
+        (cons (car dict) (filter-dict-rec (cdr dict) pred))
+          (filter-dict-rec (cdr dict) pred))
+    )
+  )
+)
+
 (define filter-dict
   (lambda (dict pred)
-    @TODO
+    (if (dict? dict) (make-ok (cons "dict" (filter-dict-rec (cdr dict) pred)))
+      (make-error "Error: not a dictionary")
+    )
   )
 )

@@ -109,12 +109,12 @@ describe('Q2 Tests', () => {
     });
     
 
-    // /**
-    //  * Q2.3--(b) tests
-    //  */
-    // it("Q23b", () => {
-    //     expect(evalP(`(L3` + q2 + q2_test_string + `(result->val (get (result->val (filter-dict (result->val (put (result->val (put (make-dict) 2 3)) 3 4)) (lambda (x y) (< (+ x y) 6)))) 2))` + `)`)).to.deep.equal(makeOk(3));
-    //     expect(evalP(`(L3` + q2 + q2_test_string + `(result->val (get (result->val (filter-dict (result->val (put (result->val (put (make-dict) 2 3)) 3 4)) (lambda (x y) (< (+ x y) 6)))) 3))` + `)`)).to.deep.equal(makeOk("Key not found"));
-    // });
+    /**
+     * Q2.3--(b) tests
+     */
+    it("Q23b", () => {
+        expect(evalP(`(L3` + q2 + q2_test_string + `(result->val (get (result->val (filter-dict (result->val (put (result->val (put (make-dict) 2 3)) 3 4)) (lambda (x y) (< (+ x y) 6)))) 2))` + `)`)).to.deep.equal(makeOk(3));
+        expect(evalP(`(L3` + q2 + q2_test_string + `(result->val (get (result->val (filter-dict (result->val (put (result->val (put (make-dict) 2 3)) 3 4)) (lambda (x y) (< (+ x y) 6)))) 3))` + `)`)).to.deep.equal(makeOk("Key not found"));
+    });
 
 });
