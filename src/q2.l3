@@ -81,7 +81,7 @@
   (lambda (no-dict k v)
     (if (eq? no-dict '()) (cons (cons k v) '())
       (if (eq? (car (car no-dict)) k) 
-        (cons (cons (k v)) (cdr no-dict))
+        (cons (cons k v) (cdr no-dict))
           (cons (car no-dict) (put-rec (cdr no-dict) k v))
       )
     )
@@ -96,7 +96,17 @@
 
 (define map-dict
   (lambda (dict f)
-    @TODO
+    (if (dict? dict) (make-ok (cons "dict" (map-dict-rec (cdr dict) f)))
+      (make-error "Error: not a dictionary")
+    )
+  )
+)
+
+(define map-dict-rec
+  (lambda (dict f)
+    (if (eq? dict '()) '()
+      (cons (cons (car (car dict)) (f (cdr (car dict)))) (map-dict-rec (cdr dict) f))
+    )
   )
 )
 
