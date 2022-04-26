@@ -80,7 +80,7 @@
 
 (define put
   (lambda (dict k v)
-    (if(dict?) (cons "dict" put-rec((cdr dict) k v)) (make-error "Error: not a dictionary"))
+    (if (dict? dict) (cons "dict" put-rec((cdr dict) k v)) (make-error "Error: not a dictionary"))
   )
 )
 
