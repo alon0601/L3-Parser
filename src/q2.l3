@@ -90,11 +90,7 @@
 
 (define put
   (lambda (dict k v)
-<<<<<<< HEAD
     (if (dict? dict) (make-ok (cons "dict" (put-rec (cdr dict) k v))) (make-error "Error: not a dictionary"))
-=======
-    (if (dict? dict) (cons "dict" put-rec((cdr dict) k v)) (make-error "Error: not a dictionary"))
->>>>>>> f854bc87e340c61a72a1f7f5ed6f7a52611a4eb6
   )
 )
 
