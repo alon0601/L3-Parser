@@ -77,7 +77,7 @@ export const valueToString = (val: Value): string =>
     isString(val) ? `"${val}"` :
     isClosure(val) ? closureToString(val) :
     isPrimOp(val) ? val.op :
-    isSymbolSExp(val) ? val.val :
+    isSymbolSExp(val) ? '"' + val.val + '"' :
     isEmptySExp(val) ? "'()" :
     isCompoundSExp(val) ? compoundSExpToString(val) :
     val;

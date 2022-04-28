@@ -8,10 +8,15 @@ Purpose: Transform L3 AST to JavaScript program string
 Signature: l30ToJS(l2AST)
 Type: [EXP | Program] => Result<string>
 */
+const isVeryPrimitiveOp = (x: string): boolean =>
+     ["+", "-", "*", "/", ">", "<", "=","string=?"].includes(x);
+
+const istTypeOfOp = (x: string): boolean =>
+     ["boolean?", "string?", "number?", "symbol?"].includes(x);
 
 const unparseLitExp = (le: LitExp): string =>
     isEmptySExp(le.val) ? `[]` :
-    isSymbolSExp(le.val) ? `'${valueToString(le.val)}` :
+    isSymbolSExp(le.val) ? `Symbol.for(${valueToString(le.val)})` :
     isCompoundSExp(le.val) ? `'${valueToString(le.val)}` :
     `${le.val}`;
 
@@ -25,7 +30,7 @@ export const unparseL31 = (exp: Program | Exp): string =>
     isVarRef(exp) ? exp.var :
     isProcExp(exp) ? `(${unparseProcExp(exp)})` :
     isIfExp(exp) ? `(${unparseL31(exp.test)} ? ${unparseL31(exp.then)} : ${unparseL31(exp.alt)})` :
-    isAppExp(exp) ? `(${unparAppExp(exp)})` :
+    isAppExp(exp) ? unparAppExp(exp) :
     isPrimOp(exp) ? unparsePrimeOp(exp) :
     isLetStarExp(exp)? exp.tag:
     isLetExp(exp) ? unparseLetExp(exp) :
@@ -34,15 +39,24 @@ export const unparseL31 = (exp: Program | Exp): string =>
     exp;
 
 const unparseLExps = (les: Exp[]): string =>
-    map(unparseL31, les).join(" ");
+    map(unparseL31, les).join(";\n");
 
 const unparsePrimeOp = (p: PrimOp): string =>
-    (p.op === '=')? "===":
+    (p.op === '=') || (p.op === "string=?") || (p.op === "eq?")? "===":
+    (istTypeOfOp(p.op)) ? '((x) => (typeof (x) === ' + p.op.slice(0,-1) + '))':
+    (p.op === "not")? '!':
+    (p.op === "and")? "&&":
+    (p.op === "or")? "||":
     p.op
 
 const unparAppExp = (les: AppExp): string =>
-    (isProcExp(les.rator))?(unparseL31(les.rator) + '('  + map(unparseL31, les.rands).join(',') + ')'):
-    map(unparseL31, les.rands).join(" " + unparseL31(les.rator) + " ");
+    (!isPrimOp(les.rator))?(unparseL31(les.rator) + '('  + map(unparseL31, les.rands).join(',') + ')'):
+    (isVeryPrimitiveOp(les.rator.op))? '(' + map(unparseL31, les.rands).join(" " + unparseL31(les.rator) + " ") + ')':
+    (istTypeOfOp(les.rator.op))? unparseL31(les.rator) + unparseLExps(les.rands):
+    ('(' + unparseL31(les.rator)  + map(unparseL31, les.rands).join(',') + ')')
+
+
+    
 
 
 const unparseProcExp = (pe: ProcExp): string => 
@@ -50,7 +64,7 @@ const unparseProcExp = (pe: ProcExp): string =>
 
 
 const unparseLetExp = (le: LetExp) : string => 
-    `((${map((b: Binding) => b.var.var, le.bindings).join(",")}) => ${unparseLExps(le.body)}) (${map((b: Binding) => b.val, le.bindings).join(",")})`
+    `((${map((b: Binding) => b.var.var, le.bindings).join(",")}) => ${unparseLExps(le.body)})(${map((b: Binding) => unparseL31(b.val), le.bindings).join(",")})`
 
 export const l30ToJS = (exp: Exp | Program): Result<string>  => 
     makeOk(unparseL31(exp));
